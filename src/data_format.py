@@ -4,7 +4,7 @@ import pandas as pd
 
 REQUIRED_COLUMNS = [
     "Season", "Team", "Conference", "Seed", "Record_Wins", "Div_Winner",
-    "Div_Record_Wins", "Sharp_OL_Rank", "Turnover_Diff", "Def_Sacks",
+    "Div_Record_Wins", "Sharp_PFF_OL_Rank", "Turnover_Diff", "Def_Sacks",
     "Off_Pts_Scored", "Def_Pts_Allowed", "Pt_Differential",
     "Time_Of_Possession_Rank", "Last5_Wins", "AllPro_Count",
     "Format_7Team", "Playoff_Round_Reached, Team_LostTo_Or_SBWin"
