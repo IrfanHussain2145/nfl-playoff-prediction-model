@@ -20,8 +20,13 @@ df[bool_cols] = df[bool_cols].astype(int)
 X = df.drop(columns=["Label"])
 y = df["Label"]
 
-# Drop string columns not needed for modeling
-drop_cols = [col for col in X.columns if "Team" in col or "Conference" in col]
+# Drop non-feature columns that leak info or aren't predictive
+drop_cols = [
+    col for col in X.columns if any(sub in col for sub in [
+        "Team", "Conference", "Season", "Format_7Team",
+        "Playoff_Round_Reached", "Team_LostTo_Or_SBWin"
+    ])
+]
 X = X.drop(columns=drop_cols)
 
 # Train/test split
