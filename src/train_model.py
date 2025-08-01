@@ -9,7 +9,7 @@ import os
 data_path = os.path.join("data", "processed", "playoff_training_data.csv")
 df = pd.read_csv(data_path)
 
-# Convert TRUE/FALSE strings to booleans
+# Convert TRUE/FALSE strings to booleans 
 df = df.replace({'TRUE': True, 'FALSE': False})
 
 # Optional: if any boolean columns remain, convert them to 0/1
