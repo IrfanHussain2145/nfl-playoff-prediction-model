@@ -39,9 +39,13 @@ for _, row in wc_games.iterrows():
     if conf == "AFC":
         X, _, _ = build_matchup_row(team1, team2, season, stats_df)
         X = X[model.feature_names_in_]
-        pred = model.predict(X)[0]
+
+        proba = model.predict_proba(X)[0]
+        pred = model.classes_[proba.argmax()]
+        confidence = proba.max()
+
         winner = team1 if pred == 1 else team2
-        print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {winner}")
+        print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {season} {pred} (Confidence: {confidence:.2f})")
         winners_by_conf[conf].append(winner)
         all_results.append((season, 1, team1, team2, winner))
 
@@ -53,9 +57,13 @@ for _, row in wc_games.iterrows():
     if conf == "NFC":
         X, _, _ = build_matchup_row(team1, team2, season, stats_df)
         X = X[model.feature_names_in_]
-        pred = model.predict(X)[0]
+        
+        proba = model.predict_proba(X)[0]
+        pred = model.classes_[proba.argmax()]
+        confidence = proba.max()
+
         winner = team1 if pred == 1 else team2
-        print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {winner}")
+        print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {season} {pred} (Confidence: {confidence:.2f})")
         winners_by_conf[conf].append(winner)
         all_results.append((season, 1, team1, team2, winner))
 
@@ -90,10 +98,14 @@ def simulate_divisional_round(conf, wc_winners):
 
         X, _, _ = build_matchup_row(team1, team2, season, stats_df)
         X = X[model.feature_names_in_]
-        pred = model.predict(X)[0]
+
+        proba = model.predict_proba(X)[0]
+        pred = model.classes_[proba.argmax()]
+        confidence = proba.max()
+
         winner = team1 if pred == 1 else team2
 
-        print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {winner}")
+        print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {season} {pred} (Confidence: {confidence:.2f})")
         winners.append(winner)
         all_results.append((season, 2, team1, team2, winner))
 
@@ -116,9 +128,13 @@ def simulate_conference_championship(conf, div_winners):
     team1, team2 = sorted(div_winners, key=get_seed)
     X, _, _ = build_matchup_row(team1, team2, season, stats_df)
     X = X[model.feature_names_in_]
-    pred = model.predict(X)[0]
+    
+    proba = model.predict_proba(X)[0]
+    pred = model.classes_[proba.argmax()]
+    confidence = proba.max()
+
     winner = team1 if pred == 1 else team2
-    print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {winner}")
+    print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {season} {pred} (Confidence: {confidence:.2f})")
     all_results.append((season, 3, team1, team2, winner))
     return winner
 
@@ -132,9 +148,13 @@ if afc_champion and nfc_champion:
     team1, team2 = sorted([afc_champion, nfc_champion], key=get_seed)
     X, _, _ = build_matchup_row(team1, team2, season, stats_df)
     X = X[model.feature_names_in_]
-    pred = model.predict(X)[0]
+
+    proba = model.predict_proba(X)[0]
+    pred = model.classes_[proba.argmax()]
+    confidence = proba.max()
+
     winner = team1 if pred == 1 else team2
-    print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {winner}")
+    print(f"🏈 {season} {team1} vs {season} {team2} → Winner: {season} {pred} (Confidence: {confidence:.2f})")
     all_results.append((season, 4, team1, team2, winner))
     print(f"\n👑 Predicted Super Bowl Champion: {season} {winner}")
 else:
