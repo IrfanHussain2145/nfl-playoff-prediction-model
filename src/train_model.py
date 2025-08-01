@@ -1,9 +1,10 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
 import joblib
 import os
+import matplotlib.pyplot as plt
 
 # Load processed data
 data_path = os.path.join("data", "processed", "playoff_training_data.csv")
@@ -36,10 +37,27 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 clf = RandomForestClassifier(random_state=42)
 clf.fit(X_train, y_train)
 
+# Attach feature names used for later use in prediction
+clf.feature_names_in_ = X.columns.tolist()
+
 # Evaluate model
 y_pred = clf.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Test Accuracy: {accuracy:.2f}")
+test_acc = accuracy_score(y_test, y_pred)
+train_acc = accuracy_score(y_train, clf.predict(X_train))
+print(f"Train Accuracy: {train_acc:.2f}")
+print(f"Test Accuracy: {test_acc:.2f}")
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+# Feature importance plot
+importances = clf.feature_importances_
+indices = importances.argsort()[::-1]
+plt.figure(figsize=(10, 6))
+plt.title("Feature Importances")
+plt.bar(range(X.shape[1]), importances[indices])
+plt.xticks(range(X.shape[1]), [X.columns[i] for i in indices], rotation=90)
+plt.tight_layout()
+plt.savefig("models/feature_importance.png")
+plt.close()
 
 # Save model
 os.makedirs("models", exist_ok=True)
